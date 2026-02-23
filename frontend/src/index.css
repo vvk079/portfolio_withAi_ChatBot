@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Sorts+Mill+Goudy:ital@0;1&family=JetBrains+Mono:wght@100..800&display=swap');
+@import 'tailwindcss';
+
+@theme {
+    --font-sans: "Poppins", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+}
+
+@layer base {
+    body {
+        @apply bg-[#030712] text-zinc-300 antialiased text-sm selection:bg-white/20 selection:text-white;
+    }
+
+    button {
+        @apply cursor-pointer;
+    }
+}
+
+@layer utilities {
+    .glass {
+        @apply bg-white/5 backdrop-blur-md border border-white/10;
+    }
+
+    .glow-white {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .glow-gray {
+        text-shadow: 0 0 10px rgba(161, 161, 170, 0.5);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        @apply bg-zinc-950;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        @apply bg-zinc-800 rounded-full hover:bg-white/30 transition-colors;
+    }
+}

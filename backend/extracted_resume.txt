@@ -1,0 +1,48 @@
+Vivek
+vivekkushwah776@gmail.com|linkedin.com/in/vivek-shekhawat-5021b1193|github.com/vvk079|mevivek.netlify.app
+Education
+University School of Information, Communication and T echnologyNew Delhi, India
+Bachelor of Technology in Electronics and Communication Engineering 2022 – 2026
+Technical Skills
+Languages:JavaScript, TypeScript, Python, Java, HTML/CSS
+F rameworks & Libraries:React, Next.js, Node.js, Express.js, TailwindCSS, Framer Motion, REST APIs
+Databases & Cloud:MongoDB, Supabase, Cloudinary, Vercel, Netlify
+Developer T ools:Git, GitHub, VS Code, Postman, Docker
+AI Integration:Google Gemini API, Prompt Engineering
+Core Concepts:Authentication, OAuth, RESTful API Design, Serverless Functions, API Integration, Responsive
+Design, CI/CD
+Experience
+IBM SkillsBuild (CSRBOX)July 2025 – Aug 2025
+Frontend Developer Intern
+–Developed responsive and user-friendly web interfaces using modern frontend technologies, focusing on clean UI
+design and optimized component architecture for scalable applications.
+–Integrated Google OAuth authentication and RESTful APIs to enable secure user login, protected routes, and
+seamless data communication between frontend and backend services.
+–Collaborated on deploying production-ready applications using Vercel and Netlify, ensuring optimized build
+performance and smooth CI/CD workflows.
+–Worked on AI-integrated systems and SaaS-style architecture by contributing to real-world projects involving API
+integrations and cloud-based services.
+Projects
+Thumb-io|React, TypeScript, Node.js, Express, MongoDB, Gemini API, Cloudinary2025
+GitHub Repository|Live Demo
+–Built a full-stack AI thumbnail generation platform that allows creators to generate professional thumbnails using
+prompts, styles, and color palettes. Designed an intuitive UI and scalable backend architecture for production usage.
+–Integrated Google Gemini API for AI image generation and implemented Google OAuth authentication to secure
+user sessions and protect API routes across the application.
+–Implemented Cloudinary-based cloud storage and CDN delivery for fast image optimization, secure downloads, and
+persistent thumbnail management.
+–Deployed the complete full-stack application on Vercel using serverless API functions and optimized API
+performance for real-world usage.
+PriceDrop|Next.js, Supabase, Firecrawl, Recharts2025
+GitHub Repository|Live Demo
+–Built a Next.js-based product price tracking platform that monitors product prices and visualizes historical trends
+using Recharts. Designed a modern dashboard for tracking multiple products in real time.
+–Implemented Google OAuth authentication and user data management using Supabase, enabling personalized
+dashboards and cloud database storage.
+–Integrated Firecrawl for automated product data scraping and built server-side API routes in Next.js for scalable
+data fetching and processing.
+Achievements
+Designed and deployed multiple full-stack AI applications integrating authentication, cloud storage, and external APIs,
+demonstrating end-to-end product development skills.
+Strengthened modern web development skills by consistently building and deploying real-world projects using MERN
+stack and serverless platforms, focusing on scalable architecture and AI integration.

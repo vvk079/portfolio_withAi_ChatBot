@@ -37,12 +37,18 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://mevvk.vercel.app"
+        "https://mevvk.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:3000",
     ],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def root():
+    return {"status": "online", "message": "Portfolio AI Chatbot API is running"}
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 

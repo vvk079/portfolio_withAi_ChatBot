@@ -15,8 +15,6 @@ app = FastAPI()
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     print(f"HTTP Error: {exc.status_code} - {exc.detail}")
-    with open("debug_log.txt", "a") as f:
-        f.write(f"HTTP Error: {exc.status_code} - {exc.detail}\n")
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.detail},
@@ -27,12 +25,11 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     body = await request.body()
     error_msg = f"Validation error: {exc.errors()}\nBody: {body.decode()}\n"
     print(error_msg)
-    with open("debug_log.txt", "a") as f:
-        f.write(error_msg)
     return JSONResponse(
         status_code=400,
         content={"detail": exc.errors(), "body": body.decode()},
     )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -75,42 +72,58 @@ class ChatRequest(BaseModel):
 @app.post("/chat")
 async def chat(request: ChatRequest):
     print(f"Received request: {request}")
-    if not OPENROUTER_API_KEY:
-        raise HTTPException(status_code=500, detail="OpenRouter API key not configured")
+    try:
+        if not OPENROUTER_API_KEY:
+            raise HTTPException(status_code=500, detail="OpenRouter API key not configured")
 
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-    for msg in request.history:
-        messages.append(msg)
-    messages.append({"role": "user", "content": request.message})
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        for msg in request.history:
+            messages.append(msg)
+        messages.append({"role": "user", "content": request.message})
 
-    print(f"Sending to OpenRouter: {messages}")
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": "google/gemini-2.0-flash-lite-001",
-                "messages": messages,
-            },
-            timeout=30.0
-        )
-        
-        if response.status_code != 200:
-            raise HTTPException(status_code=response.status_code, detail=response.text)
-        
-        data = response.json()
-        ai_message = data["choices"][0]["message"]["content"]
-        
-        # Save to DB asynchronously (optional, but requested)
-        await chat_history_collection.insert_one({
-            "user_message": request.message,
-            "ai_response": ai_message,
-        })
-        
-        return {"response": ai_message}
+        print(f"Sending to OpenRouter: {messages}")
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": "google/gemini-2.0-flash-lite-001",
+                    "messages": messages,
+                },
+                timeout=30.0
+            )
+            
+            if response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail=response.text)
+            
+            data = response.json()
+            if "choices" not in data or len(data["choices"]) == 0:
+                raise HTTPException(status_code=500, detail=f"Invalid response from OpenRouter: {data}")
+                
+            ai_message = data["choices"][0]["message"]["content"]
+            
+            # Save to DB asynchronously
+            try:
+                await chat_history_collection.insert_one({
+                    "user_message": request.message,
+                    "ai_response": ai_message,
+                })
+            except Exception as db_e:
+                print(f"Database error: {db_e}")
+                # We won't fail the request if the DB insert fails
+                
+            return {"response": ai_message}
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Unexpected error in /chat: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

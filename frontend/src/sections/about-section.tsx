@@ -9,7 +9,7 @@ export default function AboutSection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-base leading-relaxed text-zinc-400 space-y-5"
+                className="w-full glass p-6 rounded-2xl border-white/5 text-base leading-relaxed text-zinc-400 space-y-5"
             >
                 <p>
                     I’m <span className="text-white font-medium">Vivek Shekhawat</span>, a <span className="text-white font-medium">Software Engineer</span> and full-stack developer who builds end-to-end digital products. I completed my <span className="text-white font-medium">B.Tech in Electronics and Communication Engineering</span> in 2026, and I work across the stack — React and Next.js on the front, Node.js and Express with MongoDB or PostgreSQL behind them.

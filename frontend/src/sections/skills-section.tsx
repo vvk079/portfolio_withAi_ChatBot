@@ -78,7 +78,7 @@ export default function SkillsSection() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-80px" }}
-                className="flex flex-col gap-7"
+                className="w-full glass p-6 rounded-2xl border-white/5 flex flex-col gap-7"
             >
                 {skillGroups.map((group) => (
                     <motion.div key={group.label} variants={groupVariants} className="space-y-3">
@@ -96,7 +96,7 @@ export default function SkillsSection() {
                                     variants={pillVariants}
                                     whileHover={{ y: -3, scale: 1.05 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                                    className="px-3.5 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-zinc-400 text-[13px] font-medium cursor-default transition-colors duration-200 hover:bg-white/10 hover:border-white/40 hover:text-white hover:shadow-[0_0_18px_rgba(255,255,255,0.12)]"
+                                    className="px-3.5 py-1.5 rounded-lg bg-white/[0.08] border border-white/10 text-zinc-400 text-[13px] font-medium cursor-default transition-colors duration-200 hover:bg-white/[0.16] hover:border-white/40 hover:text-white hover:shadow-[0_0_18px_rgba(255,255,255,0.12)]"
                                 >
                                     {skill}
                                 </motion.span>

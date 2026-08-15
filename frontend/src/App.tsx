@@ -16,7 +16,8 @@ import ActiveSectionProvider from "./components/active-section-provider";
 export default function App() {
     return (
         <ActiveSectionProvider>
-            <main className="max-md:px-4">
+            <div className="starfield" aria-hidden="true" />
+            <main className="relative z-10 max-md:px-4">
                 <Navbar />
                 <ScrollProgress />
                 <LenisScroll />

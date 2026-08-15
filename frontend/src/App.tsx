@@ -10,24 +10,26 @@ import HeroSection from "./sections/hero-section";
 import ProjectsSection from "./sections/projects-section";
 import SkillsSection from "./sections/skills-section";
 import ChatAssistant from "./components/chat-assistant";
+import ActiveSectionProvider from "./components/active-section-provider";
 
 
 export default function App() {
     return (
-        <main className="max-md:px-4">
-            <Navbar />
-            <ScrollProgress />
-            <LenisScroll />
-            <HeroSection />
-            <AboutSection />
-            <ProjectsSection />
-            <ExperienceSection />
-            <EducationSection />
-            <SkillsSection />
-            <ContactSection />
-            <Footer />
-            <ChatAssistant />
-        </main>
-
+        <ActiveSectionProvider>
+            <main className="max-md:px-4">
+                <Navbar />
+                <ScrollProgress />
+                <LenisScroll />
+                <HeroSection />
+                <AboutSection />
+                <ExperienceSection />
+                <ProjectsSection />
+                <EducationSection />
+                <SkillsSection />
+                <ContactSection />
+                <Footer />
+                <ChatAssistant />
+            </main>
+        </ActiveSectionProvider>
     )
 }

@@ -1,48 +1,59 @@
-Vivek
-vivekkushwah776@gmail.com|linkedin.com/in/vivek-shekhawat-5021b1193|github.com/vvk079|mevivek.netlify.app
-Education
-University School of Information, Communication and T echnologyNew Delhi, India
-Bachelor of Technology in Electronics and Communication Engineering 2022 – 2026
-Technical Skills
-Languages:JavaScript, TypeScript, Python, Java, HTML/CSS
-F rameworks & Libraries:React, Next.js, Node.js, Express.js, TailwindCSS, Framer Motion, REST APIs
-Databases & Cloud:MongoDB, Supabase, Cloudinary, Vercel, Netlify
-Developer T ools:Git, GitHub, VS Code, Postman, Docker
-AI Integration:Google Gemini API, Prompt Engineering
-Core Concepts:Authentication, OAuth, RESTful API Design, Serverless Functions, API Integration, Responsive
-Design, CI/CD
-Experience
-IBM SkillsBuild (CSRBOX)July 2025 – Aug 2025
-Frontend Developer Intern
-–Developed responsive and user-friendly web interfaces using modern frontend technologies, focusing on clean UI
-design and optimized component architecture for scalable applications.
-–Integrated Google OAuth authentication and RESTful APIs to enable secure user login, protected routes, and
-seamless data communication between frontend and backend services.
-–Collaborated on deploying production-ready applications using Vercel and Netlify, ensuring optimized build
-performance and smooth CI/CD workflows.
-–Worked on AI-integrated systems and SaaS-style architecture by contributing to real-world projects involving API
-integrations and cloud-based services.
-Projects
-Thumb-io|React, TypeScript, Node.js, Express, MongoDB, Gemini API, Cloudinary2025
-GitHub Repository|Live Demo
-–Built a full-stack AI thumbnail generation platform that allows creators to generate professional thumbnails using
-prompts, styles, and color palettes. Designed an intuitive UI and scalable backend architecture for production usage.
-–Integrated Google Gemini API for AI image generation and implemented Google OAuth authentication to secure
-user sessions and protect API routes across the application.
-–Implemented Cloudinary-based cloud storage and CDN delivery for fast image optimization, secure downloads, and
-persistent thumbnail management.
-–Deployed the complete full-stack application on Vercel using serverless API functions and optimized API
-performance for real-world usage.
-PriceDrop|Next.js, Supabase, Firecrawl, Recharts2025
-GitHub Repository|Live Demo
-–Built a Next.js-based product price tracking platform that monitors product prices and visualizes historical trends
-using Recharts. Designed a modern dashboard for tracking multiple products in real time.
-–Implemented Google OAuth authentication and user data management using Supabase, enabling personalized
-dashboards and cloud database storage.
-–Integrated Firecrawl for automated product data scraping and built server-side API routes in Next.js for scalable
-data fetching and processing.
-Achievements
-Designed and deployed multiple full-stack AI applications integrating authentication, cloud storage, and external APIs,
-demonstrating end-to-end product development skills.
-Strengthened modern web development skills by consistently building and deploying real-world projects using MERN
-stack and serverless platforms, focusing on scalable architecture and AI integration.
+Vivek Shekhawat
+
+CONTACT
+Phone: +91 7065250776
+Email: vivekkushwah776@gmail.com
+LinkedIn: https://www.linkedin.com/in/vivek-shekhawat-5021b1193
+GitHub: https://github.com/vvk079
+Portfolio: https://mevvk.vercel.app/
+Location: New Delhi, India
+
+EXPERIENCE
+
+Writecream - Full Stack Developer Intern
+Mar 2026 - Present (current role)
+- Built and shipped AI Job Applier, a SaaS product, using React, Next.js, and TypeScript.
+- Developed and shipped pages across the Writecream platform, an AI tools ecosystem serving 1.5M+ users.
+- Built pixel-accurate, accessible React interfaces from design specifications, implementing loading, error, and empty states, responsive layouts, and ARIA-based accessibility.
+- Integrated LLM and third-party REST and GraphQL APIs with secure authentication, request throttling, and robust error handling, while improving Lighthouse scores and reducing bundle size.
+- Created reusable React components used across different AI tools to keep the UI clean and consistent.
+- Added new features and fixed bugs to improve the speed and overall experience of the AI tools.
+
+Bulkdoor - Frontend Developer Intern
+Dec 2025 - Feb 2026
+- Developed and shipped responsive, reusable React components for an early-stage startup, translating product requirements into clean, maintainable, production-ready UI.
+- Worked closely with founders in a fast-paced environment to rapidly prototype features, iterate on feedback, and deliver releases on tight timelines.
+- Integrated REST APIs into the frontend with proper state handling, error management, and consistent rendering across mobile, tablet, and desktop breakpoints.
+
+TECHNICAL SKILLS
+Languages: JavaScript, TypeScript, Java, Python, HTML/CSS, SQL
+Frameworks & Libraries: React, Next.js, Node.js, Express.js, TailwindCSS, REST APIs, GraphQL
+AI & LLM: Claude, Gemini API, OpenRouter, LLM Integration, Prompt Engineering, AI Chatbots
+Databases: MySQL, MongoDB, PostgreSQL, Supabase, Query Optimization
+Developer Tools: Git, GitHub, VS Code, Postman, Docker, Vercel, Netlify, Cloudinary, Chrome Extensions (Manifest V3)
+Core CS: Data Structures & Algorithms, OOP, DBMS, Problem Solving
+
+PROJECTS
+
+Thumb-io (2026)
+Tech: React, Next.js, TypeScript, TailwindCSS, Node.js, Express, MongoDB, Gemini API, Cloudinary
+GitHub: https://github.com/vvk079/thumbnailio
+Live: https://thumbnailio.vercel.app/
+- Built a full-stack AI thumbnail generation platform with a responsive, accessible React UI letting creators generate thumbnails using prompts, styles, and color palettes.
+- Developed RESTful APIs with Node.js / Express.js, designed MongoDB schemas, integrated the Gemini API with OAuth, and implemented proper loading, error, and empty states across the frontend.
+- Crafted a reusable component library with TailwindCSS, consistent design tokens, and pixel-clean responsive layouts so every screen ships with polished states.
+- Optimized performance with Cloudinary CDN caching and Vercel serverless deployment; reduced Time-to-Interactive and improved Lighthouse scores on core pages.
+
+PriceDrop (2026)
+Tech: Next.js, TypeScript, TailwindCSS, Shadcn UI, Supabase (PostgreSQL), Firecrawl, Recharts
+GitHub: https://github.com/vvk079/TrackPrice
+Live: https://dealbee.vercel.app/
+- Built a Next.js e-commerce price tracking dashboard with historical trend visualization using Recharts; converted mockups into pixel-clean, responsive UI with full loading, error, and empty states.
+- Implemented Google OAuth and a Supabase (PostgreSQL) data layer, writing SQL queries for analytics dashboards, product insights, and price history.
+- Designed mobile-first layouts with Shadcn UI primitives and TailwindCSS tokens, ensuring the dashboard renders cleanly across phone, tablet, and desktop breakpoints.
+- Integrated Firecrawl with server-side API routes for scalable web scraping across e-commerce product pages, shipped behind clean, reviewable PRs with clear async updates.
+
+EDUCATION
+University School of Information, Communication and Technology - New Delhi, India
+B.Tech in Electronics and Communication Engineering
+Aug 2022 - Jun 2026 (graduated)

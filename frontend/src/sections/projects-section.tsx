@@ -1,10 +1,169 @@
 import Section from "../components/section";
 import { Github, ExternalLink, X, Zap, Layers, ArrowRightIcon } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import {
+    motion,
+    AnimatePresence,
+    useScroll,
+    useTransform,
+    useReducedMotion,
+    type MotionValue,
+} from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+
+interface Project {
+    id: string;
+    title: string;
+    description: string;
+    longDescription: string;
+    image: string;
+    github?: string;
+    live?: string;
+    tags: string[];
+    features: string[];
+    techDetails: string;
+}
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { type: "spring" as const, stiffness: 100, damping: 20 }
+    }
+};
+
+/**
+ * One row of the project list.
+ *
+ * Split into its own component so `useTransform` isn't called inside a loop,
+ * and so the scroll-driven `x` lives on a wrapper: Framer's layout projection
+ * (used by `layoutId` for the modal morph) conflicts with a transform animated
+ * on the same element.
+ */
+function ProjectRow({
+    project,
+    index,
+    progress,
+    onSelect,
+}: {
+    project: Project;
+    index: number;
+    progress: MotionValue<number>;
+    onSelect: (id: string) => void;
+}) {
+    const reduceMotion = useReducedMotion();
+    // Alternate rows drift in opposite directions, meeting at centre-screen.
+    const direction = index % 2 === 0 ? -1 : 1;
+    const drift = reduceMotion ? 0 : 90 * direction;
+    const x = useTransform(progress, [0, 0.5, 1], [drift, 0, -drift]);
+
+    return (
+        <li>
+            <motion.div style={{ x }}>
+                <motion.div
+                    layoutId={project.id}
+                    variants={itemVariants}
+                    onClick={() => onSelect(project.id)}
+                    whileHover={{ scale: 1.01 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    className="group relative glass rounded-2xl overflow-hidden cursor-pointer border-white/5 hover:border-white/20 transition-colors flex flex-col sm:flex-row sm:min-h-52"
+                >
+                    {/* Thumbnail */}
+                    <div className="relative shrink-0 w-full sm:w-72 aspect-video sm:aspect-auto overflow-hidden">
+                        <motion.img
+                            layoutId={`image-${project.id}`}
+                            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                            src={project.image}
+                            alt={project.title}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#030712]/60 hidden sm:block" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 p-6 flex flex-col justify-center gap-3.5">
+                        <div className="flex items-start justify-between gap-4">
+                            <div className="min-w-0">
+                                <div className="flex items-center gap-2.5">
+                                    <span className="font-mono text-[10px] text-white/30 tabular-nums">
+                                        {String(index + 1).padStart(2, "0")}
+                                    </span>
+                                    <motion.h3
+                                        layoutId={`title-${project.id}`}
+                                        className="text-xl font-bold text-white truncate"
+                                    >
+                                        {project.title}
+                                    </motion.h3>
+                                </div>
+                                <motion.p
+                                    layoutId={`desc-${project.id}`}
+                                    className="text-zinc-500 text-sm leading-relaxed line-clamp-3 mt-2"
+                                >
+                                    {project.description}
+                                </motion.p>
+                            </div>
+
+                            <div className="flex items-center gap-2 shrink-0">
+                                {project.github && (
+                                    <a
+                                        href={project.github}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={`${project.title} source code on GitHub`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white hover:border-white/20 transition-all"
+                                    >
+                                        <Github size={16} />
+                                    </a>
+                                )}
+                                {project.live && (
+                                    <a
+                                        href={project.live}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={`${project.title} live demo`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white hover:border-white/20 transition-all"
+                                    >
+                                        <ExternalLink size={16} />
+                                    </a>
+                                )}
+                                <button
+                                    type="button"
+                                    aria-label={`Expand details for ${project.title}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onSelect(project.id);
+                                    }}
+                                    className="p-2 rounded-lg bg-white/5 border border-white/10 text-white group-hover:bg-white group-hover:text-zinc-950 transition-all"
+                                >
+                                    <ArrowRightIcon className="size-4" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1.5">
+                            {project.tags.map(tag => (
+                                <span key={tag} className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-[10px] font-mono">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </motion.div>
+            </motion.div>
+        </li>
+    );
+}
 
 export default function ProjectsSection() {
     const [selectedId, setSelectedId] = useState<string | null>(null);
+    const listRef = useRef<HTMLDivElement>(null);
+
+    // 0 as the list enters from the bottom, 1 as it leaves past the top.
+    const { scrollYProgress } = useScroll({
+        target: listRef,
+        offset: ["start end", "end start"],
+    });
 
     useEffect(() => {
         if (selectedId) {
@@ -19,8 +178,8 @@ export default function ProjectsSection() {
 
     const projects = [
         {
-            id: "thumbnailio",
-            title: "Thumbnailio",
+            id: "thumb-io",
+            title: "Thumb-io",
             description: "Full-stack AI thumbnail generation platform. Generate high-quality thumbnails using Google's Gemini API.",
             longDescription: "A comprehensive AI-driven tool for content creators to generate click-worthy thumbnails instantly. Leveraging Google's Gemini Pro Vision model, the platform analyzes video context to suggest and create visual assets with high precision.",
             image: "/assets/project-1.png",
@@ -36,8 +195,8 @@ export default function ProjectsSection() {
             techDetails: "Built with a modern MERN stack, utilizing specialized prompts for the Gemini Pro Vision model to ensure visual consistency."
         },
         {
-            id: "dealbee",
-            title: "Dealbee",
+            id: "pricedrop",
+            title: "PriceDrop",
             description: "An automated price tracking system and deals aggregator. Get notified when prices drop for your favorite items across multiple platforms.",
             longDescription: "A high-performance e-commerce utility that monitors product prices across major retailers. Uses Firecrawl for sophisticated web scraping and Supabase for real-time data persistence, providing visualized price trends to help users save money.",
             image: "/assets/project-2.png",
@@ -60,101 +219,31 @@ export default function ProjectsSection() {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.2 }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { type: "spring" as const, stiffness: 100, damping: 20 }
+            transition: { staggerChildren: 0.12 }
         }
     };
 
     return (
         <Section title="Projects" id="projects">
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-8"
-            >
-                {projects.map((project) => (
-                    <motion.div
-                        key={project.id}
-                        layoutId={project.id}
-                        variants={itemVariants}
-                        onClick={() => setSelectedId(project.id)}
-                        whileHover={{ y: -5 }}
-                        className="group relative glass rounded-2xl overflow-hidden cursor-pointer border-white/5 hover:border-white/20 transition-colors"
-                    >
-                        <div className="aspect-video overflow-hidden relative">
-                            <motion.img
-                                layoutId={`image-${project.id}`}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
-                                src={project.image}
-                                alt={project.title}
-                            />
-                            <div className="absolute inset-0 bg-zinc-950/40 group-hover:bg-transparent transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/30 text-white text-sm font-mono">
-                                    Expand Details_
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="p-6 relative z-10">
-                            <div className="flex flex-wrap gap-2 mb-4">
-                                {project.tags.map(tag => (
-                                    <span key={tag} className="px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-[10px] font-mono">
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-
-                            <motion.h3 layoutId={`title-${project.id}`} className="text-xl font-bold text-white mb-2 group-hover:text-white transition-colors">
-                                {project.title}
-                            </motion.h3>
-
-                            <motion.p layoutId={`desc-${project.id}`} className="text-zinc-500 text-sm mb-6 line-clamp-2 leading-relaxed">
-                                {project.description}
-                            </motion.p>
-
-                            <div className="pt-4 flex items-center justify-between border-t border-white/5">
-                                <div className="flex gap-3">
-                                    {project.github && (
-                                        <a
-                                            href={project.github}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white hover:border-white/20 transition-all"
-                                        >
-                                            <Github size={16} />
-                                        </a>
-                                    )}
-                                    {project.live && (
-                                        <a
-                                            href={project.live}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="p-2 rounded-lg bg-zinc-900 border border-white/5 text-zinc-400 hover:text-white hover:border-white/20 transition-all"
-                                        >
-                                            <ExternalLink size={16} />
-                                        </a>
-                                    )}
-                                </div>
-                                <div className="p-2 rounded-full bg-white/5 text-white">
-                                    <ArrowRightIcon className="size-4" />
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
-            </motion.div>
+            <div ref={listRef}>
+                <motion.ul
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                    className="flex flex-col gap-4"
+                >
+                    {projects.map((project, index) => (
+                        <ProjectRow
+                            key={project.id}
+                            project={project}
+                            index={index}
+                            progress={scrollYProgress}
+                            onSelect={setSelectedId}
+                        />
+                    ))}
+                </motion.ul>
+            </div>
 
             <AnimatePresence>
                 {selectedId && selectedProject && (

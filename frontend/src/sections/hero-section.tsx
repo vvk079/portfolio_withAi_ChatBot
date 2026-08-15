@@ -1,9 +1,20 @@
-import { ArrowRightIcon, Linkedin, Github, Mail, Terminal, Bot } from 'lucide-react';
-import { motion } from "framer-motion";
+import { ArrowRightIcon, Linkedin, Github, Mail, Terminal, Bot, ChevronDown } from 'lucide-react';
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { AVATAR_LAYOUT_ID, useHeroDocked } from "../context/active-section-context";
 
 export default function HeroSection() {
-    const name = "VIVEK";
-    const nameArray = name.split("");
+    const heroDocked = useHeroDocked();
+    const reduceMotion = useReducedMotion();
+
+    // Fade the scroll cue out over the first 150px of scrolling.
+    const { scrollY } = useScroll();
+    const cueOpacity = useTransform(scrollY, [0, 150], [1, 0]);
+
+    const scrollToAbout = () => {
+        document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+    };
+    const name = "VIVEK SHEKHAWAT";
+    const nameWords = name.split(" ");
 
     const container = {
         hidden: { opacity: 0 },
@@ -65,19 +76,22 @@ export default function HeroSection() {
             />
 
             <motion.div
+                id="hero-avatar-anchor"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}
-                className="relative group"
+                className="relative group size-36"
             >
                 <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-white/20 to-zinc-500/20 blur opacity-20 group-hover:opacity-60 transition duration-1000"></div>
-                <img
-                    src="/assets/user-image.jpg"
-                    alt="Profile Image"
-                    className="relative size-36 rounded-full border-2 border-white/30 object-cover shadow-[0_0_30px_rgba(255,255,255,0.1)]"
-                    width={144}
-                    height={144}
-                />
+                {!heroDocked && (
+                    <motion.img
+                        layoutId={AVATAR_LAYOUT_ID}
+                        src="/assets/user-image.jpg"
+                        alt="Vivek Shekhawat"
+                        className="relative size-36 rounded-full border-2 border-white/30 object-cover shadow-[0_0_30px_rgba(255,255,255,0.1)]"
+                        transition={{ type: "spring", stiffness: 260, damping: 30 }}
+                    />
+                )}
             </motion.div>
 
             <div className="text-center mt-8 px-4 relative z-10">
@@ -95,12 +109,17 @@ export default function HeroSection() {
                     variants={container}
                     initial="hidden"
                     animate="visible"
-                    className="text-5xl md:text-7xl font-bold tracking-tight text-white flex justify-center"
+                    aria-label={name}
+                    className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-white flex flex-wrap justify-center gap-x-4 md:gap-x-6"
                 >
-                    {nameArray.map((letter, index) => (
-                        <motion.span key={index} variants={child} className={letter === " " ? "mr-4" : ""}>
-                            {letter}
-                        </motion.span>
+                    {nameWords.map((word) => (
+                        <span key={word} aria-hidden="true" className="flex">
+                            {word.split("").map((letter, index) => (
+                                <motion.span key={`${word}-${index}`} variants={child}>
+                                    {letter}
+                                </motion.span>
+                            ))}
+                        </span>
                     ))}
                 </motion.h1>
 
@@ -159,6 +178,33 @@ export default function HeroSection() {
                     </a>
                 </motion.div>
             </div>
+
+            {/* Scroll cue — fades out as soon as the visitor starts scrolling */}
+            <motion.div
+                style={{ opacity: cueOpacity }}
+                className="absolute bottom-6 inset-x-0 flex justify-center pointer-events-none"
+            >
+                <motion.button
+                    type="button"
+                    onClick={scrollToAbout}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 2.4, duration: 0.8 }}
+                    aria-label="Scroll to the About section"
+                    className="pointer-events-auto flex flex-col items-center gap-2 text-white/40 hover:text-white transition-colors"
+                >
+                    <span className="font-mono text-[10px] uppercase tracking-[0.3em]">
+                        Scroll
+                    </span>
+                    <motion.span
+                        animate={reduceMotion ? undefined : { y: [0, 6, 0] }}
+                        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                        className="flex"
+                    >
+                        <ChevronDown size={18} />
+                    </motion.span>
+                </motion.button>
+            </motion.div>
         </section>
     );
 }

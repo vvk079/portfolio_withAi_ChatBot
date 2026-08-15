@@ -7,6 +7,26 @@
 }
 
 @layer base {
+
+    /* Scales the whole rem-based layout down ~6% (16px -> 15px root).
+       Media-query breakpoints are unaffected: they resolve against the
+       browser's initial root size, so md/lg still trigger at 768/1024px. */
+    html {
+        font-size: 93.75%;
+        /* Hide the page scrollbar. Scoped to the document only so the chat
+           panel and project modal keep their .custom-scrollbar tracks. The
+           fixed progress bar at the top stands in as the position indicator. */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        display: none;
+    }
+
     body {
         @apply bg-[#030712] text-zinc-300 antialiased text-sm selection:bg-white/20 selection:text-white;
     }

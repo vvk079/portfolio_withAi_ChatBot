@@ -7,12 +7,29 @@ interface Message {
     content: string;
 }
 
+// Falls back to localhost so a missing env var doesn't silently produce
+// requests to the string "undefined/chat".
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000';
+
+// The backend sleeps on Render's free tier and takes ~50s to wake, so allow
+// well past that before giving up.
+const REQUEST_TIMEOUT_MS = 60_000;
+
 export default function ChatAssistant() {
     const [isOpen, setIsOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [history, setHistory] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isWaking, setIsWaking] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Wake the sleeping backend as soon as the page loads, so it is usually
+    // warm by the time a visitor actually opens the chat.
+    useEffect(() => {
+        fetch(`${API_BASE}/`).catch(() => {
+            /* best effort — a failed warm-up must stay silent */
+        });
+    }, []);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -31,34 +48,61 @@ export default function ChatAssistant() {
     }, [history, isOpen]);
 
     const handleSend = async () => {
-        if (!message.trim()) return;
+        // Guard against a second send while one is in flight: the Enter key
+        // bypasses the button's disabled state.
+        if (isLoading || !message.trim()) return;
 
-        const userMsg: Message = { role: 'user', content: message };
+        const outgoing = message;
+        const userMsg: Message = { role: 'user', content: outgoing };
         setHistory(prev => [...prev, userMsg]);
         setMessage('');
         setIsLoading(true);
 
+        // Anything past a couple of seconds is almost certainly a cold start,
+        // so switch the indicator's wording rather than looking hung.
+        const wakeTimer = setTimeout(() => setIsWaking(true), 2500);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat`, {
+            const response = await fetch(`${API_BASE}/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: message,
-                    history: history,
-                }),
+                body: JSON.stringify({ message: outgoing, history }),
+                signal: controller.signal,
             });
 
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (response.status === 429) {
+                throw new Error('RATE_LIMIT');
+            }
+            if (response.status === 503) {
+                throw new Error('UNCONFIGURED');
+            }
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
 
             const data = await response.json();
-            const aiMsg: Message = { role: 'assistant', content: data.response };
-            setHistory(prev => [...prev, aiMsg]);
+            setHistory(prev => [...prev, { role: 'assistant', content: data.response }]);
         } catch (error) {
             console.error('Error sending message:', error);
-            const errMsg: Message = { role: 'assistant', content: "SYSTEM_ERROR: Connection failed. Please ensure the backend is operational." };
-            setHistory(prev => [...prev, errMsg]);
+
+            let content =
+                "I couldn't reach the assistant just now. Please try again, or email vivekkushwah776@gmail.com.";
+            if (error instanceof Error && error.message === 'RATE_LIMIT') {
+                content = "That's a lot of questions! Please wait a moment before sending another.";
+            } else if (error instanceof Error && error.message === 'UNCONFIGURED') {
+                content = "The assistant is temporarily unavailable. Please email vivekkushwah776@gmail.com and I'll get back to you.";
+            } else if (error instanceof DOMException && error.name === 'AbortError') {
+                content = "The assistant is taking longer than usual to wake up. Please send that again.";
+            }
+
+            setHistory(prev => [...prev, { role: 'assistant', content }]);
         } finally {
+            clearTimeout(wakeTimer);
+            clearTimeout(timeout);
             setIsLoading(false);
+            setIsWaking(false);
         }
     };
 
@@ -127,7 +171,7 @@ export default function ChatAssistant() {
                                             <div className="size-1 bg-white/30 rounded-full animate-bounce [animation-delay:0.2s]" />
                                             <div className="size-1 bg-white/30 rounded-full animate-bounce [animation-delay:0.4s]" />
                                         </div>
-                                        PROCESSING...
+                                        {isWaking ? 'WAKING SERVER — UP TO 30s...' : 'PROCESSING...'}
                                     </div>
                                 </div>
                             )}
@@ -141,8 +185,11 @@ export default function ChatAssistant() {
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                                placeholder="Execute command..."
-                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/20 font-mono"
+                                disabled={isLoading}
+                                maxLength={2000}
+                                aria-label="Ask a question about Vivek"
+                                placeholder={isLoading ? 'Waiting for reply...' : 'Execute command...'}
+                                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/20 font-mono disabled:opacity-50"
                             />
                             <button
                                 onClick={handleSend}

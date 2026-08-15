@@ -178,14 +178,14 @@ export default function ProjectsSection() {
 
     const projects = [
         {
-            id: "thumb-io",
-            title: "Thumb-io",
+            id: "thumbnailio",
+            title: "Thumbnailio",
             description: "Full-stack AI thumbnail generation platform. Generate high-quality thumbnails using Google's Gemini API.",
             longDescription: "A comprehensive AI-driven tool for content creators to generate click-worthy thumbnails instantly. Leveraging Google's Gemini Pro Vision model, the platform analyzes video context to suggest and create visual assets with high precision.",
             image: "/assets/project-1.png",
             github: "https://github.com/vvk079/thumbnailio",
             live: "https://thumbnailio.vercel.app/",
-            tags: ["React", "TypeScript", "Node.js", "Gemini API"],
+            tags: ["MERN Stack", "Next.js", "TypeScript", "Tailwind CSS", "Gemini API", "Cloudinary"],
             features: [
                 "Gemini AI Integration for context-aware thumbnails",
                 "Real-time image generation and processing",
@@ -195,14 +195,14 @@ export default function ProjectsSection() {
             techDetails: "Built with a modern MERN stack, utilizing specialized prompts for the Gemini Pro Vision model to ensure visual consistency."
         },
         {
-            id: "pricedrop",
-            title: "PriceDrop",
+            id: "dealbee",
+            title: "DealBee",
             description: "An automated price tracking system and deals aggregator. Get notified when prices drop for your favorite items across multiple platforms.",
             longDescription: "A high-performance e-commerce utility that monitors product prices across major retailers. Uses Firecrawl for sophisticated web scraping and Supabase for real-time data persistence, providing visualized price trends to help users save money.",
             image: "/assets/project-2.png",
             live: "https://dealbee.vercel.app/",
             github: "https://github.com/vvk079/TrackPrice",
-            tags: ["React.js", "Next.js", "Supabase", "Firecrawl", "Recharts"],
+            tags: ["Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "Supabase", "Firecrawl", "Recharts"],
             features: [
                 "Advanced Web Scraping with Firecrawl for dynamic content",
                 "Email alerts for customized price thresholds",

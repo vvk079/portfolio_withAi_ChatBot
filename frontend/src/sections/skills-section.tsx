@@ -10,11 +10,15 @@ export default function SkillsSection() {
     const skillGroups: SkillGroup[] = [
         {
             label: "Languages",
-            items: ["JavaScript", "TypeScript", "Java", "Python", "HTML/CSS", "SQL"],
+            items: ["JavaScript (ES6+)", "TypeScript", "Java", "Python", "HTML5", "CSS3", "SQL"],
         },
         {
-            label: "Frameworks & Libraries",
-            items: ["React", "Next.js", "Node.js", "Express.js", "TailwindCSS", "REST APIs", "GraphQL"],
+            label: "Frontend",
+            items: ["React.js", "Next.js", "React Hooks", "State Management", "Tailwind CSS", "shadcn/ui", "Responsive Design", "Web Accessibility (ARIA)"],
+        },
+        {
+            label: "Backend",
+            items: ["Node.js", "Express.js", "REST APIs", "GraphQL", "JSON", "Middleware", "Server-Side Rendering (SSR)", "JWT", "OAuth 2.0"],
         },
         {
             label: "AI & LLM",
@@ -22,15 +26,15 @@ export default function SkillsSection() {
         },
         {
             label: "Databases",
-            items: ["MySQL", "MongoDB", "PostgreSQL", "Supabase", "Query Optimization"],
+            items: ["MongoDB", "Mongoose", "MySQL", "PostgreSQL", "Supabase", "RDBMS", "Schema Design", "Query Optimization"],
         },
         {
-            label: "Developer Tools",
-            items: ["Git", "GitHub", "VS Code", "Postman", "Docker", "Vercel", "Netlify", "Cloudinary", "Chrome Extensions (MV3)"],
+            label: "Tools & Platforms",
+            items: ["Git", "GitHub", "VS Code", "Postman", "Docker", "npm", "Vercel", "Netlify", "Cloudinary", "CI/CD"],
         },
         {
-            label: "Core CS",
-            items: ["Data Structures & Algorithms", "OOP", "DBMS", "Problem Solving"],
+            label: "Core CS & Practices",
+            items: ["MERN Stack", "Data Structures & Algorithms", "OOP", "DBMS", "SDLC", "Agile", "Code Review", "Debugging", "Problem Solving"],
         },
     ];
 

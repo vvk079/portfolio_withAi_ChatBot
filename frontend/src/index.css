@@ -31,6 +31,43 @@
         @apply bg-[#030712] text-zinc-300 antialiased text-sm selection:bg-white/20 selection:text-white;
     }
 
+    /* Starfield texture. The PNG is white stars on full transparency, so it
+       layers over the navy without flattening it to black, and the tile is
+       edge-cleaned so it repeats without seams. Fixed, so it reads as depth
+       behind the page rather than scrolling with the content.
+
+       Note: body's background propagates to the canvas, which leaves body
+       itself transparent — that is what lets this sit at z-index -1 and
+       still be visible. Do not add a background to html, or it will hide. */
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background-image: url("/assets/starfield.png");
+        background-repeat: repeat;
+        /* Kept low: body copy sits directly on this with no card behind it,
+           and brighter stars start to compete with the text. */
+        opacity: 0.22;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        body::before {
+            animation: starfield-drift 240s linear infinite;
+        }
+    }
+
+    @keyframes starfield-drift {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 1080px 1080px;
+        }
+    }
+
     button {
         @apply cursor-pointer;
     }
